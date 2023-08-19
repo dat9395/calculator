@@ -1,0 +1,2 @@
+- set number of digits limit to avoid screen overflow
+- negative number ("-" symbol in digits section)

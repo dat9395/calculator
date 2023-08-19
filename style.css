@@ -1,0 +1,80 @@
+* {
+    box-sizing: border-box;
+}
+
+body * {
+    border-style: solid;
+    border-width: thin;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calculator {
+    height: 600px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.calculator > div {
+    flex: 1 1 auto;
+    display: flex;
+}
+
+.screen {
+    height: 20%;
+    font-size: xx-large;
+    flex-direction: column;
+}
+
+.screen > div {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right: 3%;
+}
+
+.screen > .screen-digits {
+    height: 80%;
+    width: 100%;
+}
+
+.screen > .screen-operations {
+    height: 20%;
+    width: 100%;
+}
+
+.buttons {
+    height: 80%;
+}
+
+.buttons * {
+    font-size: x-large;
+}
+
+.buttons > div {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
+    justify-content: center;
+}
+
+.digits > button {
+    width: 30%;
+}
+
+.operations > button {
+    width: 45%;
+}
+
+/* Class for clicked operation button */
+.clicked {
+    background-color: lightgreen;
+}
