@@ -1,117 +1,114 @@
-window.onload = () => {
-    main();
-};
+let currentNumber = "";
+let lastNumber = "";
+let symbol = "";
+let lastClickedButton = "";
 
-function main() {
-    const screenDigits = document.querySelector(".screen-digits");
-    const screenOperations = document.querySelector(".screen-operations");
-    const digits = document.querySelectorAll(".digits > button");
-    const operations = document.querySelectorAll("button.operation");
-    const equalButton = document.querySelector(".equal");
-    const clearButton = document.querySelector(".clear");
-    const allButtons = document.querySelectorAll("button");
+const screenDigits = document.querySelector(".screen-digits");
+const screenOperations = document.querySelector(".screen-operations");
+const digits = document.querySelectorAll(".digits > button");
+const operations = document.querySelectorAll("button.operation");
+const equalButton = document.querySelector(".equal");
+const clearButton = document.querySelector(".clear");
+const allButtons = document.querySelectorAll("button");
 
-    let firstNumber = "";
-    let secondNumber = "";
-    let symbol = "";
-    let lastClickedButton = "";
-
-    // Event for all buttons to identify last clicked button
-    // Use click rather than mouseup as other events, so that it will fire last
-    allButtons.forEach((button) => {
-        button.addEventListener("click", (event) => {
-            lastClickedButton = event.target.innerText;
-        });
+// Event for all buttons to identify last clicked button
+// Use click rather than mouseup as other events, so that it will fire last
+allButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+        lastClickedButton = event.target.innerText;
     });
-    
-    // Event for digit buttons
-    digits.forEach((digit) => {
-        digit.addEventListener("mouseup", (event) => {
-            // If an operation button was clicked before, clear digit screen
-            const clicked = document.getElementsByClassName("clicked");
-            if (clicked.length != 0) {
-                screenDigits.innerText = "";
-                removeClickedAll();
-            }
+});
 
-            screenDigits.innerText += event.target.innerText;
-        });
+// Event for digit buttons
+digits.forEach((digit) => {
+    digit.addEventListener("mouseup", (event) => {
+        // If an operation button was clicked before, clear digit screen
+        if (IsSymbol(lastClickedButton)) {
+            screenDigits.innerText = "";
+        }
+
+        screenDigits.innerText += event.target.innerText;
+        currentNumber = screenDigits.innerText;
     });
+});
 
-    // Event for operation buttons
-    operations.forEach((operation) => {
-        operation.addEventListener("mouseup", (event) => {
-            console.log(lastClickedButton);
-            if (screenDigits.innerText == "") {
-                // Do nothing if no digit input
+// Event for operation buttons
+operations.forEach((operation) => {
+    operation.addEventListener("mouseup", (event) => {
+        if (screenDigits.innerText != "") {
+            screenOperations.innerText = event.target.innerText;
+            
+            // Behaviors when there's no pending operation
+            if (symbol === "") {
+                lastNumber = currentNumber;
+                currentNumber = "";
+                symbol = event.target.innerText;
             }
+            
+            // Usercase 1: user want to change operation
+            else if (IsSymbol(lastClickedButton)) {
+                symbol = event.target.innerText;
+            }
+            
+            // Usercase 2: user click the same button again
+            else if (lastClickedButton == event.target.innerText) {
+                // Do nothing
+            }
+            
+            // Behaviors when there's pending operation
             else {
-                event.target.classList.add("clicked");
-                screenOperations.innerText = event.target.innerText;
-                const clicked = document.getElementsByClassName("clicked");
-                
-                // Behaviors when there's no pending operation
-                if (symbol === "") {
-                    firstNumber = screenDigits.innerText;
-                    symbol = event.target.innerText;
-                }
-                
-                // Usercase 1: user want to change operation
-                else if (clicked.length != 1) {
-                    removeClickedAll();
-                    event.target.classList.add("clicked");
-                    symbol = event.target.innerText;
-                }
-                // Usercase 2: user click the same button again
-                else if (lastClickedButton == event.target.innerText) {
-                    // Do nothing
-                }
-                
-                // Behaviors when there's pending operation
-                else {
-                    // Save screen as second number
-                    secondNumber = screenDigits.innerText;
-                    // Then run operation and save result as first number, also display to screen
-                    firstNumber = operate(symbol, firstNumber, secondNumber);
-                    screenDigits.innerText = firstNumber;
-                    // Then save new operation
-                    symbol = event.target.innerText;
-                }
+                lastNumber = operate(symbol, lastNumber, currentNumber);
+                currentNumber = "";
+                screenDigits.innerText = lastNumber;
+                // Save new operation
+                symbol = event.target.innerText;
             }
-            console.log(firstNumber);
-            console.log(secondNumber);
-            console.log(symbol);
-        });
+        }
     });
+});
 
-    equalButton.addEventListener("mouseup", (event) => {
+// Event for equal button
+equalButton.addEventListener("mouseup", (event) => {
+    if (currentNumber != "" && lastNumber != "" && symbol != "") {
+        lastNumber = operate(symbol, lastNumber, currentNumber);
+        currentNumber = "";
+        screenDigits.innerText = lastNumber;
+        screenOperations.innerText = "";
+    }
+});
 
-    });
+// Event for clear button (temporarily)
+clearButton.addEventListener("mouseup", (event) => {
+    screenDigits.innerText = "";
+    screenOperations.innerText = "";
+    currentNumber = "";
+    lastNumber = "";
+    symbol = "";
+});
 
-    // Event for clear button (temporarily)
-    clearButton.addEventListener("mouseup", (event) => location.reload());
+
+/* HELPER FUNCTIONS */
+function IsSymbol(lastClickedButton) {
+    const symbols = ["+", "-", "*", "/", "="];
+    if (symbols.some((symbol) => symbol == lastClickedButton)) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
-// Remove clicked class for all elements
-function removeClickedAll() {
-    const operations = document.querySelectorAll("button.operation");
-    operations.forEach((operation) => {
-        operation.classList.remove("clicked");
-    })
-}
-
-// Math functions
-function operate(symbol, a, b) {
-    if (symbol == "+") {
+function operate(s, a, b) {
+    if (s == "+") {
         return add(a, b);
     }
-    if (symbol == "-") {
+    if (s == "-") {
         return subtract(a, b);
     }
-    if (symbol == "*") {
+    if (s == "*") {
         return multiply(a, b);
     }
-    if (symbol == "/") {
+    if (s == "/") {
         return divide(a, b);
     }
 }
@@ -129,5 +126,13 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-    return Number(a) / Number(b);
+    if (b != 0) {
+        return Number(a) / Number(b);
+    }
+    else {
+        alert("Cannot divide by 0!");
+        // Clear global variable symbol to prevent issues
+        symbol = "";
+        return "";
+    }
 }
