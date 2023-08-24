@@ -5,7 +5,7 @@ let lastClickedButton = "";
 
 const screenDigits = document.querySelector(".screen-digits");
 const screenOperations = document.querySelector(".screen-operations");
-const digits = document.querySelectorAll(".digits > button");
+const digits = document.querySelectorAll("button.digit");
 const operations = document.querySelectorAll("button.operation");
 const equalButton = document.querySelector(".equal");
 const clearButton = document.querySelector(".clear");
@@ -23,12 +23,19 @@ allButtons.forEach((button) => {
 digits.forEach((digit) => {
     digit.addEventListener("mouseup", (event) => {
         // If an operation button was clicked before, clear digit screen
-        if (IsSymbol(lastClickedButton)) {
+        if (isSymbol(lastClickedButton)) {
             screenDigits.innerText = "";
         }
 
-        screenDigits.innerText += event.target.innerText;
-        currentNumber = screenDigits.innerText;
+        // Case: float
+        if (event.target.textContent == "." && 
+            screenDigits.textContent.match(/\./) != null) {
+            // Do nothing
+        }
+        else {
+            screenDigits.innerText += event.target.innerText;
+            currentNumber = screenDigits.innerText;
+        }
     });
 });
 
@@ -46,7 +53,7 @@ operations.forEach((operation) => {
             }
             
             // Usercase 1: user want to change operation
-            else if (IsSymbol(lastClickedButton)) {
+            else if (isSymbol(lastClickedButton)) {
                 symbol = event.target.innerText;
             }
             
@@ -84,11 +91,12 @@ clearButton.addEventListener("mouseup", (event) => {
     currentNumber = "";
     lastNumber = "";
     symbol = "";
+    lastClickedButton = "";
 });
 
 
 /* HELPER FUNCTIONS */
-function IsSymbol(lastClickedButton) {
+function isSymbol(lastClickedButton) {
     const symbols = ["+", "-", "*", "/", "="];
     if (symbols.some((symbol) => symbol == lastClickedButton)) {
         return true;
@@ -96,6 +104,10 @@ function IsSymbol(lastClickedButton) {
     else {
         return false;
     }
+}
+
+function isDigit(lastClickedButton) {
+
 }
 
 function operate(s, a, b) {
