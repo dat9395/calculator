@@ -9,6 +9,7 @@ const digits = document.querySelectorAll("button.digit");
 const operations = document.querySelectorAll("button.operation");
 const equalButton = document.querySelector(".equal");
 const clearButton = document.querySelector(".clear");
+const clearEntryButton = document.querySelector(".clear-entry");
 const allButtons = document.querySelectorAll("button");
 
 // Event for all buttons to identify last clicked button
@@ -28,8 +29,8 @@ digits.forEach((digit) => {
         }
 
         // Case: float
-        if (event.target.textContent == "." && 
-            screenDigits.textContent.match(/\./) != null) {
+        if (event.target.innerText == "." && 
+            screenDigits.innerText.match(/\./) != null) {
             // Do nothing
         }
         else {
@@ -84,7 +85,7 @@ equalButton.addEventListener("mouseup", (event) => {
     }
 });
 
-// Event for clear button (temporarily)
+// Event for clear button
 clearButton.addEventListener("mouseup", (event) => {
     screenDigits.innerText = "";
     screenOperations.innerText = "";
@@ -92,6 +93,14 @@ clearButton.addEventListener("mouseup", (event) => {
     lastNumber = "";
     symbol = "";
     lastClickedButton = "";
+});
+
+// Event for clear entry button
+clearEntryButton.addEventListener("mouseup", (event) => {
+    const length = screenDigits.innerText.length
+    screenDigits.innerText = screenDigits.innerText.slice(0, length-1);
+    //Also update current number
+    currentNumber = screenDigits.innerText;
 });
 
 
@@ -104,10 +113,6 @@ function isSymbol(lastClickedButton) {
     else {
         return false;
     }
-}
-
-function isDigit(lastClickedButton) {
-
 }
 
 function operate(s, a, b) {
