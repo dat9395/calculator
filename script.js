@@ -3,8 +3,9 @@ let lastNumber = "";
 let symbol = "";
 let lastClickedButton = "";
 
-const screenDigits = document.querySelector(".screen-digits");
+const screenDigits = document.querySelector(".screen-digits > span");
 const screenOperations = document.querySelector(".screen-operations");
+const screenOuter = document.querySelector(".screen");
 const digits = document.querySelectorAll("button.digit");
 const operations = document.querySelectorAll("button.operation");
 const equalButton = document.querySelector(".equal");
@@ -34,8 +35,8 @@ digits.forEach((digit) => {
             // Do nothing
         }
         else {
-            // Limit length of number to 21 digits
-            if (screenDigits.innerText.length < 21) {
+            // Limit length of number based on container width (90% of outer container width)
+            if (screenDigits.clientWidth < screenOuter.clientWidth * 90 / 100) {
                 screenDigits.innerText += event.target.innerText;
                 currentNumber = screenDigits.innerText;
             }
