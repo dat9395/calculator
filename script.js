@@ -35,7 +35,7 @@ digits.forEach((digit) => {
         }
         else {
             // Limit length of number to 23 digits
-            if (screenDigits.innerText.length < 23) {
+            if (screenDigits.innerText.length < 21) {
                 screenDigits.innerText += event.target.innerText;
                 currentNumber = screenDigits.innerText;
             }
