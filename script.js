@@ -34,8 +34,11 @@ digits.forEach((digit) => {
             // Do nothing
         }
         else {
-            screenDigits.innerText += event.target.innerText;
-            currentNumber = screenDigits.innerText;
+            // Limit length of number to 23 digits
+            if (screenDigits.innerText.length < 23) {
+                screenDigits.innerText += event.target.innerText;
+                currentNumber = screenDigits.innerText;
+            }
         }
     });
 });
@@ -78,9 +81,10 @@ operations.forEach((operation) => {
 /* EVENT FOR EQUAL BUTTON */
 equalButton.addEventListener("mouseup", (event) => {
     if (currentNumber != "" && lastNumber != "" && symbol != "") {
-        lastNumber = operate(symbol, lastNumber, currentNumber);
-        currentNumber = "";
-        screenDigits.innerText = lastNumber;
+        currentNumber = operate(symbol, lastNumber, currentNumber);
+        lastNumber = "";
+        symbol = "";
+        screenDigits.innerText = currentNumber;
         screenOperations.innerText = "";
     }
 });
