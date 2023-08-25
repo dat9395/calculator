@@ -12,15 +12,15 @@ const clearButton = document.querySelector(".clear");
 const clearEntryButton = document.querySelector(".clear-entry");
 const allButtons = document.querySelectorAll("button");
 
-// Event for all buttons to identify last clicked button
-// Use click rather than mouseup as other events, so that it will fire last
+/* EVENT TO IDENTIFY LAST CLICKED BUTTON */
 allButtons.forEach((button) => {
+    // Use click rather than mouseup as other events, so that it will fire last
     button.addEventListener("click", (event) => {
         lastClickedButton = event.target.innerText;
     });
 });
 
-// Event for digit buttons
+/* EVENT FOR DIGIT BUTTONS */
 digits.forEach((digit) => {
     digit.addEventListener("mouseup", (event) => {
         // If an operation button was clicked before, clear digit screen
@@ -40,7 +40,7 @@ digits.forEach((digit) => {
     });
 });
 
-// Event for operation buttons
+/* EVENT FOR SYMBOL (OPERATION) BUTTONS */
 operations.forEach((operation) => {
     operation.addEventListener("mouseup", (event) => {
         if (screenDigits.innerText != "") {
@@ -75,7 +75,7 @@ operations.forEach((operation) => {
     });
 });
 
-// Event for equal button
+/* EVENT FOR EQUAL BUTTON */
 equalButton.addEventListener("mouseup", (event) => {
     if (currentNumber != "" && lastNumber != "" && symbol != "") {
         lastNumber = operate(symbol, lastNumber, currentNumber);
@@ -85,7 +85,7 @@ equalButton.addEventListener("mouseup", (event) => {
     }
 });
 
-// Event for clear button
+/* EVENT FOR CLEAR BUTTON */
 clearButton.addEventListener("mouseup", (event) => {
     screenDigits.innerText = "";
     screenOperations.innerText = "";
@@ -95,7 +95,7 @@ clearButton.addEventListener("mouseup", (event) => {
     lastClickedButton = "";
 });
 
-// Event for clear entry button
+/* EVENT FOR CLEAR ENTRY BUTTON */
 clearEntryButton.addEventListener("mouseup", (event) => {
     const length = screenDigits.innerText.length
     screenDigits.innerText = screenDigits.innerText.slice(0, length-1);
@@ -103,6 +103,45 @@ clearEntryButton.addEventListener("mouseup", (event) => {
     currentNumber = screenDigits.innerText;
 });
 
+/* EVENT FOR KEYBOARD SUPPORT */
+document.addEventListener("keydown", (event) => {
+    const mouseup = new MouseEvent("mouseup");
+    const click = new MouseEvent("click");
+    
+    // For digits
+    digits.forEach((digit) => {
+        if (digit.innerText == event.key) {
+            digit.dispatchEvent(mouseup);
+            digit.dispatchEvent(click);
+        }
+    });
+
+    // For clear entry
+    if (event.key == "Backspace") {
+        clearEntryButton.dispatchEvent(mouseup);
+        clearEntryButton.dispatchEvent(click);
+    }
+
+    // For symbols
+    operations.forEach((operation) => {
+        if (operation.innerText == event.key) {
+            operation.dispatchEvent(mouseup);
+            operation.dispatchEvent(click);
+        }
+    });
+
+    // For equal
+    if (event.key == "=" || event.key == "Enter") {
+        equalButton.dispatchEvent(mouseup);
+        equalButton.dispatchEvent(click);
+    }
+
+    // For clear
+    if (event.key == "Escape") {
+        clearButton.dispatchEvent(mouseup);
+        clearButton.dispatchEvent(click);
+    }
+});
 
 /* HELPER FUNCTIONS */
 function isSymbol(lastClickedButton) {
