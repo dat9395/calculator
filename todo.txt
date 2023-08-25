@@ -1,2 +1,3 @@
-- set number of digits limit to avoid screen overflow
-- negative number ("-" symbol in digits section)
+DONE - set number of digits limit to avoid screen overflow
+- negative number ("-" symbol in digits section), doable by multiply with -1
+- consider changing innerText to button value

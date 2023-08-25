@@ -150,7 +150,7 @@ document.addEventListener("keydown", (event) => {
 
 /* HELPER FUNCTIONS */
 function isSymbol(lastClickedButton) {
-    const symbols = ["+", "-", "*", "/", "="];
+    const symbols = ["+", "-", "x", "/", "="];
     if (symbols.some((symbol) => symbol == lastClickedButton)) {
         return true;
     }
@@ -166,7 +166,7 @@ function operate(s, a, b) {
     if (s == "-") {
         return subtract(a, b);
     }
-    if (s == "*") {
+    if (s == "x") {
         return multiply(a, b);
     }
     if (s == "/") {
