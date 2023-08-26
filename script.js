@@ -11,6 +11,7 @@ const operations = document.querySelectorAll("button.operation");
 const equalButton = document.querySelector(".equal");
 const clearButton = document.querySelector(".clear");
 const clearEntryButton = document.querySelector(".clear-entry");
+const resultButtons = document.querySelectorAll(".result");
 const allButtons = document.querySelectorAll("button");
 
 /* EVENT TO IDENTIFY LAST CLICKED BUTTON */
@@ -35,11 +36,19 @@ digits.forEach((digit) => {
             // Do nothing
         }
         else {
-            // Limit length of number based on container width (90% of outer container width)
-            if (screenDigits.clientWidth < screenOuter.clientWidth * 90 / 100) {
-                screenDigits.innerText += event.target.innerText;
-                currentNumber = screenDigits.innerText;
-            }
+            screenDigits.innerText += event.target.innerText;
+            currentNumber = screenDigits.innerText;
+        }
+    });
+});
+
+/* EVENT TO PREVENT INPUT OVERFLOWING THE SCREEN */
+digits.forEach((digit) => {
+    // Use click event so that it will fire after mouseup events above
+    digit.addEventListener("click", (event) => {
+        const length = screenDigits.innerText.length
+        if (screenDigits.clientWidth > screenOuter.clientWidth) {
+            screenDigits.innerText = screenDigits.innerText.slice(0, length-1);
         }
     });
 });
@@ -88,6 +97,17 @@ equalButton.addEventListener("mouseup", (event) => {
         screenDigits.innerText = currentNumber;
         screenOperations.innerText = "";
     }
+});
+
+/* EVENT TO PREVENT RESULT OVERFLOWING THE SCREEN */
+resultButtons.forEach((button) => {
+    // Use click event so that it will fire after mouseup events above
+    // Combine with css white-space: nowrap
+    button.addEventListener("click", (event) => {
+        if (screenDigits.clientWidth > screenOuter.clientWidth) {
+            screenDigits.innerText = Number(screenDigits.innerText).toExponential(12);
+        }
+    });
 });
 
 /* EVENT FOR CLEAR BUTTON */
