@@ -12,7 +12,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     background-color: gray;
+    gap: 20px;
 }
 
 body * {
@@ -119,4 +121,9 @@ body * {
     width: 45%;
     background-color: darkblue;
     color: lightgray;
+}
+
+footer, footer * {
+    background-color: gray;
+    color: lightcyan;
 }

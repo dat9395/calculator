@@ -13,6 +13,8 @@ const clearButton = document.querySelector(".clear");
 const clearEntryButton = document.querySelector(".clear-entry");
 const resultButtons = document.querySelectorAll(".result");
 const allButtons = document.querySelectorAll("button");
+const footerYear = document.querySelector("footer span");
+const currentYear = (new Date()).getFullYear();
 
 /* EVENT TO IDENTIFY LAST CLICKED BUTTON */
 allButtons.forEach((button) => {
@@ -167,6 +169,9 @@ document.addEventListener("keydown", (event) => {
         clearButton.dispatchEvent(click);
     }
 });
+
+/* ADD CURRENT YEAR TO FOOTER */
+footerYear.innerText = currentYear;
 
 /* HELPER FUNCTIONS */
 function isSymbol(lastClickedButton) {
