@@ -5,5 +5,3 @@ A replication of a classic calculator. Includes the following functions:
 - Clear and clear entry
 - Float input
 - Keyboard support
-
-More functions will be added in the future.
